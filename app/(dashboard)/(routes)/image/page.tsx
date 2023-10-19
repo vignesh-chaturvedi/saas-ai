@@ -27,9 +27,11 @@ import {
 } from "@/components/ui/select";
 import { Card, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const ImagePage = () => {
   const router = useRouter();
+  const proModal = useProModal();
   const [images, setImages] = useState<string[]>([]);
   // const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
 
@@ -55,8 +57,9 @@ const ImagePage = () => {
       setImages(urls);
       form.reset();
     } catch (error: any) {
-      //Todo: Open Pro Modal
-      console.log(error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       router.refresh();
     }
